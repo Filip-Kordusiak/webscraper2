@@ -20,6 +20,60 @@ from bs4 import BeautifulSoup
 from selenium.common import NoSuchElementException
 from selenium.webdriver.support.wait import WebDriverWait
 
+def znajdz_ean(tekst):
+    start = tekst.find("EAN")
+    if start != -1:
+        koniec = start + 16
+        return tekst[start + 3:koniec]
+    else:
+        return None
+
+
+def znajdz_cene(tekst):
+    pattern = r'zł&([^&]+) zł'
+    matches = re.findall(pattern, tekst)
+
+    # Jeśli znaleźliśmy pasujące wartości, wyświetlamy je
+    if matches:
+        for match in matches:
+            print(match)
+        return match
+    else:
+        return None
+
+
+def znajdz_numer(tekst):
+    pattern = r'Numer części([^&]+) EAN'
+    matches = re.findall(pattern, tekst)
+
+        # Jeśli znaleźliśmy pasujące wartości, wyświetlamy je
+    if matches:
+        for match in matches:
+            print(match)
+        return match
+    else:
+        return None
+
+
+def znajdz_ilosc(tekst):
+    pattern = r'Dostępna ilość: (\d+)'
+    match = re.search(pattern, tekst)
+
+        # Jeśli znaleziono pasującą wartość, wyświetlamy ją
+    if match:
+        dostepna_ilosc = match.group(1)
+        print("", dostepna_ilosc)
+        return dostepna_ilosc
+    else:
+        return 0
+
+
+def remove_html_attributes(table):
+    soup1 = BeautifulSoup(table, "html.parser")
+    for tag in soup1.find_all():
+        tag.attrs = {}
+    return soup1.prettify()
+
 
 
 s = Service('C:\webdriver\chromedriver.exe')
@@ -116,59 +170,6 @@ for i in range(14, 74):
                                       'button.ui-button.ui-button--no-shadow.ui-button--secondary.ui-button--xsmall.kh-tzh4f1')
 
 
-    def znajdz_ean(tekst):
-        start = tekst.find("EAN")
-        if start != -1:
-            koniec = start + 16
-            return tekst[start + 3:koniec]
-        else:
-            return None
-
-
-    def znajdz_cene(tekst):
-        pattern = r'zł&([^&]+) zł'
-        matches = re.findall(pattern, tekst)
-
-        # Jeśli znaleźliśmy pasujące wartości, wyświetlamy je
-        if matches:
-            for match in matches:
-                print(match)
-            return match
-        else:
-            return None
-
-
-    def znajdz_numer(tekst):
-        pattern = r'Numer części([^&]+) EAN'
-        matches = re.findall(pattern, tekst)
-
-        # Jeśli znaleźliśmy pasujące wartości, wyświetlamy je
-        if matches:
-            for match in matches:
-                print(match)
-            return match
-        else:
-            return None
-
-
-    def znajdz_ilosc(tekst):
-        pattern = r'Dostępna ilość: (\d+)'
-        match = re.search(pattern, tekst)
-
-        # Jeśli znaleziono pasującą wartość, wyświetlamy ją
-        if match:
-            dostepna_ilosc = match.group(1)
-            print("", dostepna_ilosc)
-            return dostepna_ilosc
-        else:
-            return 0
-
-
-    def remove_html_attributes(table):
-        soup1 = BeautifulSoup(table, "html.parser")
-        for tag in soup1.find_all():
-            tag.attrs = {}
-        return soup1.prettify()
 
 
     for i in range(0, len(kod)):
@@ -259,30 +260,30 @@ for i in range(14, 74):
 
             data_list = wszystko[i].text
             tekst_jedna_linia = data_list.replace("\n", "&")
-            data_list1 = xd
+            data_list1 = x
             tekst_jedna_linia1 = data_list1.replace("\n", "&")
             print("", tekst_jedna_linia)
             tekst_jedna_linia = [tekst_jedna_linia]
             tekst_jedna_linia1 = [tekst_jedna_linia1]
-            xdd = list()
-            xddd = list()
+            x = list()
+            x1 = list()
             paa = str(tekst_jedna_linia) + "&" + str(tekst_jedna_linia1)
             # xdd.append(tekst_jedna_linia)
             # xdd.append("&")
             # xdd.append(tekst_jedna_linia1)
-            xdd.append(paa)
+            xdd.append(p)
             # csv_writer.writerows(xdd)
 
-            print("cena", znajdz_cene(paa))  # to dodać do csv
-            print("cena", znajdz_ilosc(paa))  # to dodać do csv
+            print("cena", znajdz_cene(p))  # to dodać do csv
+            print("cena", znajdz_ilosc(p))  # to dodać do csv
 
-            xdd.append(paa)
+            xdd.append(p)
             HTML = HTML.replace("\n", "")
-            lol = str(nazwaa) + "&" + str(KOD1) + "& " + str(znajdz_cene(paa)) + "&" + str(
-                znajdz_ilosc(paa)) + "&" + str(EAN1) + "&" + str(HTML)
+            lol = str(nazwaa) + "&" + str(KOD1) + "& " + str(znajdz_cene(p)) + "&" + str(
+                znajdz_ilosc(p)) + "&" + str(EAN1) + "&" + str(HTML)
 
             xddd.append(lol)
-            csv_writer.writerows(xddd)
+            csv_writer.writerows(x1)
 
         # more_info[i].send_keys(Keys.ESCAPE)
 
